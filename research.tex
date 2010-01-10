@@ -1,0 +1,133 @@
+\documentclass[a4paper,14pt,ukrainian]{extarticle}
+\usepackage[utf8]{inputenc}
+\usepackage[ukrainian]{babel}
+\usepackage{amsthm}
+\usepackage{amssymb}
+\usepackage{subfig}
+\usepackage{tikz}
+\usepackage{tkz-arith}
+\usepackage{tkz-graph}
+\usepackage{tkz-berge}
+
+\newtheorem{problem}{Проблема}
+\newtheorem{theorem}{Теорема}
+
+\begin{document}
+    Нехай маємо граф $G(V,E)$, який розкладено відносно операції об’єднання графів на циклічні графи $G_1, G_2, \dots G_m$.
+    \begin{problem}
+        Проблема полягає у встановленні необхідних та достатніх умов для графів розкладу, які б гарантували існування гамільтонового циклу у заданому графі.
+    \end{problem}
+    Наївні умови для двох циклічних графів - повинні існувати щонайменше 2 спільні вершини, які є необхідними як ``містки'', через один із яких забезпечувався б перехід з одного графу до іншого, а через другий - повернення до вихідної точки.
+    \begin{theorem}
+        Для того, щоб об’єднання двох циклічних графів $G_1$ та $G_2$ мало гамільтоновий цикл необхідно та достатньо, щоб у них існували 2 спільні суміжні вершини.
+    \end{theorem}
+    \begin{proof}
+        Розглянемо усі можливі варіанти об’єднання двох циклічних графів $G_1(V=\lbrace a_0, a_1, \dots, a_k \rbrace ,E= \lbrace (a_0; a_1), \dots, (a_k; a_0) \rbrace)$, $G_2(V= \lbrace b_0, b_1, \dots, b_l \rbrace, E= \lbrace (b_0; b_1), \dots, (b_k; b_0) \rbrace )$:
+        \begin{enumerate}
+            \item Графи не мають спільних вершин. В такому випадку, очевидно, що їх об’єднання не може мати гамільтонового циклу.
+                \begin{figure}[h]
+                    \caption{Графи $G_1$ та $G_2$ не мають спільних вершин}
+                    \centering
+                    \subfloat[$G_1$]{
+                    \begin{tikzpicture}
+                        \SetVertexMath
+                        \grEmptyCycle[RA=2,prefix=a]{8}%
+                        \EdgeInGraphLoop{a}{8}
+                    \end{tikzpicture}
+                    }
+                    \subfloat[$G_2$]{
+                    \begin{tikzpicture}
+                        \SetVertexMath
+                        \grEmptyCycle[RA=2,prefix=b]{6}%
+                        \EdgeInGraphLoop{b}{6}
+                    \end{tikzpicture}
+                    }
+                \end{figure}
+            \item Графи мають лише одну спільну вершину $v_c$. В такому випадку можливі два випадки можливі такі ситуації:
+                \begin{enumerate}
+                    \item Перевірка на наявність ГЦ розпочинається у спільній вершині $v_c$. Тоді наступними вершинами мають бути вершини графу $G_1$ чи $G_2$, які врешті замкнуться (через циклічну структуру графа) у вершині $v_c$, а вершини іншого графу будуть проігнорованими і таким чином ГЦ не існує.
+                    \item Перевірка починається із вершини $v_0 \in V_1 \setminus v_c$ або $v_0 \in V_2 \setminus v_c$. Не порушуючи загальність нехай $v_0 \in V_1 = a_i$ для деякого $i$.
+                        Проходячи одна за одною вершини графа $G_1$, щонайбільше через $k$ кроків потрапимо у вершину $v_c$. Після цього можливі 2 варіанти:
+                        \begin{enumerate}
+                            \item Піти далі по графу $G_1$ замкнувши цикл у вершині $v_0$. Таким чином $v \in V_2 \setminus v_c$ не пройдені, а отже ГЦ не має місце.
+                            \item Перейти на граф $G_2$ замкнувши цикл у вершині $v_c$. Тоді залишаться не пройденими вершини графа $G_1$ а саме: $a_{i+2}, \dots, v_0$.
+                        \end{enumerate}
+                \end{enumerate}
+                \begin{figure}[h]
+                    \caption{Графи із однією спільною вершиною}
+                    \centering
+                    \begin{tikzpicture}
+                        \SetVertexMath
+                        \begin{scope}[node distance=2cm,rotate=135]
+                            \Vertices*{circle}{a_k,a_0,a_i,a_{i+2}}
+                            \Edge(a_k)(a_0)
+                            \Edge[style=dotted](a_k)(a_{i+2})
+                            \Edge[style=dotted](a_0)(a_i)
+                            \SOEA(a_{i+2}){v_c}
+                            \Edge(a_{i+2})(v_c)
+                            \Edge(a_i)(v_c)
+                            \NOEA(v_c){b_{j+2}}
+                            \SOEA(v_c){b_j}
+                            \EA(b_{j+2}){b_l}
+                            \EA(b_j){b_0}
+                            \Edge(v_c)(b_j)
+                            \Edge(v_c)(b_{j+2})
+                            \Edge(b_0)(b_l)
+                            \Edge[style=dotted](b_{j+2})(b_l)
+                            \Edge[style=dotted](b_j)(b_0)
+                        \end{scope}
+                    \end{tikzpicture}
+                \end{figure}
+            \item Графи мають 2 спільні суміжні вершини.
+                \begin{figure}[h]
+                    \caption{Графи із двома спільними суміжними вершинами}
+                    \centering
+                    \begin{tikzpicture}
+                        \SetVertexMath
+                        \begin{scope}[node distance=2cm,rotate=-135]
+                            \Vertices*{circle}{a_0,v_{c1},v_{c2},a_k}
+                            \Edge(a_0)(a_k)
+                            \Edge[style=dotted](a_0)(v_{c1})
+                            \Edge[style=dotted](a_k)(v_{c2})
+                            \Edge(v_{c1})(v_{c2})
+                            \EA(v_{c2}){b_l}
+                            \EA(v_{c1}){b_0}
+                            \Edge[style=dotted](v_{c2})(b_l)
+                            \Edge[style=dotted](v_{c1})(b_0)
+                            \Edge(b_l)(b_0)
+                        \end{scope}
+                    \end{tikzpicture}
+                \end{figure}
+                Яка б вершина $v_0$ не була початковою, через кільцеву структуру графа, через max(k,l) вершин зустрінеться $v_{c1}$ чи $v_{c2}$.
+                Тоді можна перейти на наступний граф, пройти його аж до наступної спільної вершини $v_{c2}$ чи $v_{c1}$ відповідно і замкнути цикл у початковій вершині $v_0$.
+            \item Графи мають 2 або більше несуміжні вершини або 3 і більше суміжних вершини.
+                \begin{figure}[h]
+                    \label{jg2+na3+a}
+                    \caption{Графи мають 2+ несуміжні або 3+ суміжні вершини}
+                    \centering
+                    \begin{tikzpicture}
+                        \SetVertexMath
+                        \begin{scope}[node distance=2cm,rotate=180]
+                            \Vertex{a_0}
+                            \NOEA(a_0){v_{c0}}
+                            \SOEA(a_0){v_{cm}}
+                            \SOEA(v_{c0}){b_0}
+                            \begin{scope}[style=dotted]
+                                \Edges(a_0,v_{c0},b_0,v_{cm},a_0)
+                                \Edge(v_{c0})(v_{cm})
+                            \end{scope}
+                        \end{scope}
+                    \end{tikzpicture}
+                \end{figure}
+                Для зручності об’єднання не однакових графів, що мають 2 або більше спільні несуміжні вершини чи 3 або більше суміжні вершини можна зобразити, як ізоморфний їм граф зображений на Рис. \ref{jg2+na3+a}.
+                Існування гамільтонового циклу вимагає існування циклу між будь-якими двома вершинами графу.
+                Розглянемо вершини $a_0$ та $b_0$.
+                Зважаючи на циклічну природу графів $G_1$ та $G_2$ існує по 2 простих шляхи з $a_0$ до $v_{c0}$, з $a_0$ до $v_{cm}$, з $v_{c0}$ до $b_0$ та $v_{cm}$ до $b_0$.
+                Використавши закон множення теорії комбінаторики, отримуємо існуснування $2*2=4$ простих шляхів з $a_0$ до $b_0$.
+                Розглянемо ці шляхи:
+                \begin{enumerate}
+                    \item[$a_0$ -> $v_{c0}$ -> $b_0$]
+                \end{enumerate}
+        \end{enumerate}
+    \end{proof}
+\end{document} 
