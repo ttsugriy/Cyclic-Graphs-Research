@@ -157,9 +157,9 @@
         \end{itemize}
     \end{proof}
     \begin{lemma}
+    \label{JoinOfHamiltonianAndCycleGraphs}
         Об’єднання гамільтонового графу із простим циклічним графом, що мають лише одне спільне ребро також є гамільтоновим графом.
     \end{lemma}
-    \label{JoinOfHamiltonianAndCycleGraphs}
     \begin{proof}
         Доведення аналогічне доведенню теореми \ref{JoinOfTwoCycleGraphs}.
     \end{proof}
@@ -212,4 +212,35 @@
         \item Для того, щоб граф $G$ був гамільтоновим, необхідно, щоб граф $G_1$ мав гамільтоновий шлях.
 
     \end{enumerate}
+
+    Для алгоритмів пов’язаних із пошуком на графах надзвичайно важливим показником є кількість вершин.
+    Тому зменшення кількості вершин є дуже бажаним явищем.
+    Далі буде запропоновано методику зменшення кількості вершин при пошуку гамільтонового шляху.
+
+    Нехай маємо промарковані вершини $u_0, \dots , v_n$ графу $G$.
+    Уведемо нову операцію, яка є практично оберненою до операції введення вершини у ребро.
+    Відмінність полягає у тому, що до маркеру вершин, суміжних до вершини $v_i$, що вилучається, буде додано номер $v_i$.
+    \begin{figure}[h]
+        \caption{Вершини до і після операції вилучення вершини}
+        \centering
+        \subfloat[До ($label(v_i) = v_i$, $label(v_j) = v_j$, $label(v_k) = v_k$)]{
+        \begin{tikzpicture}[node distance=2cm]
+            \SetVertexMath
+            \Vertices{v_j,v_i,v_k}   
+            \Edges(v_j,v_i,v_k)
+        \end{tikzpicture}
+        }
+        \hspace{2cm}
+        \subfloat[Після ($label(v_j) = \{v_j,v_i \}$, $label(v_k) = \{ v_i, v_k \}$)]{
+        \begin{tikzpicture}[node distance=2cm]
+            \SetVertexMath
+            \Vertices{v_j,v_k}   
+            \Edges(v_j,v_k)
+        \end{tikzpicture}
+        }
+    \end{figure}
+
+    Очевидно, що вилучення вершини $v_i$ не впливає на наявність гамільтонового шляху в графі $G$.
+    Адже якби це було не так, т
+
 \end{document} 
